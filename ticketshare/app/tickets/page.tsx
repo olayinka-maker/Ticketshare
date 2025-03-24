@@ -16,10 +16,11 @@ import {
   Check,
   Ticket,
   Tickets,
+  WarehouseIcon,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { useTickets } from "../_components/TicketContext";
 
 // const tickets = [
@@ -77,7 +78,7 @@ const TicketCardSlider: React.FC = () => {
   return (
     <div className="relative w-full h-full bg-white max-w-md mx-auto">
       <div
-        className={`fixed inset-x-0 bottom-0 bg-white z-50 transition-transform rounded-t-xl h-[80vh] ${
+        className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[80vh] ${
           showTransfer ? "translate-y-0" : "translate-y-full"
         } transform`}>
         <div className="w-full h-full flex flex-col overflow-auto">
@@ -95,7 +96,8 @@ const TicketCardSlider: React.FC = () => {
             </div>
           </div>
           <div className="flex gap-2 border border-gray-500 rounded-md w-[95%] mx-auto p-3 mt-4">
-            <FontAwesomeIcon icon={faCircleInfo} className="text-gray-400" />
+            {/* <FontAwesomeIcon icon={faCircleInfo} className="text-gray-400" /> */}
+            <WarehouseIcon />
             <p className="text-black text-sm">
               Only transfer tickets to people you know and trust to ensure
               everyone stays safe.
@@ -263,9 +265,9 @@ const TicketCardSlider: React.FC = () => {
 
       <div className="relative">
         <Swiper
-          slidesPerView={1}
+          slidesPerView={1.1}
           centeredSlides={true}
-          spaceBetween={16}
+          spaceBetween={9}
           pagination={{
             clickable: true,
             el: ".swiper-pagination",
@@ -276,7 +278,7 @@ const TicketCardSlider: React.FC = () => {
           className="w-full pb-10">
           {tickets.map((ticket, index) => (
             <SwiperSlide key={index} className="flex justify-center">
-              <div className=" w-80 rounded-4xl mx-auto my-4">
+              <div className="  w-72  mx-auto my-4 border border-gray-200">
                 <div className="bg-blue-600 text-white rounded-t-sm text-center py-2">
                   <p className="text-sm font-medium">Standard Ticket</p>
                 </div>
@@ -354,7 +356,7 @@ const TicketCardSlider: React.FC = () => {
         <div className="swiper-pagination flex justify-center w-full mb-4"></div>
       </div>
 
-      <div className="flex justify-center w-80 my-7 gap-4 mx-auto">
+      <div className="flex justify-center w-72 my-7 gap-4 mx-auto">
         <Button
           onClick={handleTransferTo}
           className="flex-1 bg-blue-600 text-white">

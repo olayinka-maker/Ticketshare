@@ -1,25 +1,39 @@
-// File: context/TicketContext.tsx - Context for ticket state management
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 // Define types
-export interface Ticket {
-  id: number;
+export interface TicketFormData {
+  id: number; // Add id field
+  theme: string;
+  venue: string;
+  date: Date | undefined;
+  time: string;
   section: string;
   row: string;
-  seat: string;
+  startingSeatNumber: string;
+  numberOfTickets: string;
+  generalAdmission: boolean;
+  eventImage: string | null;
 }
 
-type ActiveView = 'details' | 'transfer';
-
 interface TicketContextType {
-  tickets: Ticket[];
+  tickets: TicketFormData[];
+  setTickets: React.Dispatch<React.SetStateAction<TicketFormData[]>>;
+  addTicket: (ticket: Omit<TicketFormData, "id">) => void; // New function to add tickets
   selectedTickets: number[];
-  activeView: ActiveView;
+  activeTicketIndex: number;
+  setActiveTicketIndex: (index: number) => void;
   toggleTicketSelection: (ticketId: number) => void;
   startTransfer: () => void;
   cancelTransfer: () => void;
+  isTransferMode: boolean;
 }
 
 // Create context with undefined initial value
@@ -31,20 +45,72 @@ interface TicketProviderProps {
 }
 
 export function TicketProvider({ children }: TicketProviderProps) {
-  const [tickets, setTickets] = useState<Ticket[]>([
-    { id: 1, section: 'GA', row: 'General Admission', seat: '-' },
-    { id: 2, section: 'GA', row: 'General Admission', seat: '-' },
-    { id: 3, section: 'GA', row: 'General Admission', seat: '-' },
-    { id: 4, section: 'GA', row: 'General Admission', seat: '-' },
+  const [tickets, setTickets] = useState<TicketFormData[]>([
+    {
+      id: 0,
+      theme: "Live Concert Night",
+      venue: "Madison Square Garden, NY",
+      date: new Date("2025-04-15"),
+      time: "8:00 PM",
+      section: "A3",
+      row: "12",
+      startingSeatNumber: "24",
+      numberOfTickets: "1",
+      generalAdmission: false,
+      eventImage: "/kodaline.jpeg",
+    },
+    {
+      id: 1,
+      theme: "Oasis Reunion Tour",
+      venue: "Heaton Park, Manchester",
+      date: new Date("2025-07-11"),
+      time: "3:30 PM",
+      section: "B5",
+      row: "8",
+      startingSeatNumber: "12",
+      numberOfTickets: "1",
+      generalAdmission: false,
+      eventImage: "/test.jpg",
+    },
   ]);
-  
   const [selectedTickets, setSelectedTickets] = useState<number[]>([]);
-  const [activeView, setActiveView] = useState<ActiveView>('details');
-  
+  const [activeTicketIndex, setActiveTicketIndex] = useState(0);
+  const [isTransferMode, setIsTransferMode] = useState(false);
+
+  // Add a function to add a new ticket with auto-generated ID
+  const addTicket = (ticketData: Omit<TicketFormData, "id">) => {
+    const newTicket = {
+      ...ticketData,
+      id: Date.now(), // Generate a unique ID using timestamp
+    };
+
+    setTickets((prevTickets) => [...prevTickets, newTicket]);
+  };
+
+  // Load tickets from storage on initial render
+  useEffect(() => {
+    const storedData = localStorage.getItem("ticketData");
+    if (storedData) {
+      try {
+        const parsedData = JSON.parse(storedData);
+        setTickets(Array.isArray(parsedData) ? parsedData : [parsedData]);
+      } catch (error) {
+        console.error("Error parsing ticket data:", error);
+      }
+    }
+  }, []);
+
+  // Save tickets to storage whenever they change
+  useEffect(() => {
+    if (tickets.length > 0) {
+      localStorage.setItem("ticketData", JSON.stringify(tickets));
+    }
+  }, [tickets]);
+
   const toggleTicketSelection = (ticketId: number) => {
-    setSelectedTickets(prev => {
+    setSelectedTickets((prev) => {
       if (prev.includes(ticketId)) {
-        return prev.filter(id => id !== ticketId);
+        return prev.filter((id) => id !== ticketId);
       } else {
         return [...prev, ticketId];
       }
@@ -52,23 +118,28 @@ export function TicketProvider({ children }: TicketProviderProps) {
   };
 
   const startTransfer = () => {
-    setActiveView('transfer');
+    setIsTransferMode(true);
   };
 
   const cancelTransfer = () => {
-    setActiveView('details');
+    setIsTransferMode(false);
     setSelectedTickets([]);
   };
 
   return (
-    <TicketContext.Provider value={{
-      tickets,
-      selectedTickets,
-      activeView,
-      toggleTicketSelection,
-      startTransfer,
-      cancelTransfer,
-    }}>
+    <TicketContext.Provider
+      value={{
+        tickets,
+        setTickets,
+        addTicket,
+        selectedTickets,
+        activeTicketIndex,
+        setActiveTicketIndex,
+        toggleTicketSelection,
+        startTransfer,
+        cancelTransfer,
+        isTransferMode,
+      }}>
       {children}
     </TicketContext.Provider>
   );
@@ -77,7 +148,7 @@ export function TicketProvider({ children }: TicketProviderProps) {
 export const useTickets = (): TicketContextType => {
   const context = useContext(TicketContext);
   if (context === undefined) {
-    throw new Error('useTickets must be used within a TicketProvider');
+    throw new Error("useTickets must be used within a TicketProvider");
   }
   return context;
 };

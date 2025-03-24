@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Serif, Manrope } from "next/font/google";
 import "./globals.css";
+import { TicketProvider } from "./_components/TicketContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
@@ -32,7 +33,7 @@ export default function RootLayout({
         <div>
           <p></p>
         </div>
-        {children}
+        <TicketProvider>{children}</TicketProvider>
       </body>
     </html>
   );

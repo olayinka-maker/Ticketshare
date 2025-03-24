@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -18,11 +18,13 @@ import {
   Check,
   Ticket,
   Tickets,
+  ArrowLeft,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { useTickets } from "../_components/TicketContext";
 
 const tickets = [
   {
@@ -37,36 +39,30 @@ const tickets = [
     generalAdmission: false,
     eventImage: test,
   },
-  {
-    theme: "Live Concert Night",
-    venue: "Madison Square Garden, NY",
-    date: "April 15, 2025",
-    time: "8:00 PM",
-    section: "A3",
-    row: "12",
-    startingSeatNumber: "24",
-    numberOfTickets: "4",
-    generalAdmission: false,
-    eventImage: test,
-  },
-  {
-    theme: "Live Concert Night",
-    venue: "Madison Square Garden, NY",
-    date: "April 15, 2025",
-    time: "8:00 PM",
-    section: "A3",
-    row: "12",
-    startingSeatNumber: "24",
-    numberOfTickets: "4",
-    generalAdmission: false,
-    eventImage: test,
-  },
 ];
+
+interface Ticket {
+  theme: string;
+  venue: string;
+  date: string;
+  time: string;
+  section: string;
+  row: string;
+  generalAdmission: boolean;
+  startingSeatNumber: string;
+  numberOfTickets: string;
+  eventImage: string | null;
+}
 
 const TicketCardSlider: React.FC = () => {
   const [showTransfer, setShowTransfer] = useState(false);
   const [selectedSeats, setSelectedSeats] = useState<number[]>([]);
   const [showTransferForm, setShowTransferForm] = useState(false);
+  const { tickets, addTicket } = useTickets();
+  console.log(addTicket);
+  console.log(tickets);
+
+  const {} = addTicket;
 
   const handleSeatToggle = (seatNumber: number) => {
     setSelectedSeats((prevSeats) =>
@@ -203,19 +199,15 @@ const TicketCardSlider: React.FC = () => {
               <div className="flex text-sm text-gray-500 space-x-4">
                 <div>
                   <p className="mb-1">Sec</p>
-                  <p>GA</p>
+                  <p>{tickets[tickets.length - 1].section}</p>
                 </div>
                 <div>
                   <p className="mb-1">Row</p>
-                  <p>
-                    General
-                    <br />
-                    Admission
-                  </p>
+                  <p>{tickets[tickets.length - 1].row}</p>
                 </div>
                 <div>
                   <p className="mb-1">Seat</p>
-                  <p>--</p>
+                  <p>{selectedSeats.length}</p>
                 </div>
               </div>
             </div>
@@ -254,13 +246,22 @@ const TicketCardSlider: React.FC = () => {
             </p>
           </div>
 
-          <div className="sticky bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 mt-auto">
+          <div className="sticky flex items-center justify-between bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 mt-auto">
+            <button
+              onClick={() => {
+                setShowTransferForm(false);
+                setShowTransfer(true);
+              }}
+              className=" flex gap-x-2 text-blue-500">
+              <ChevronLeft size={24} />
+              <p>BACK</p>
+            </button>
             <Button
-              className="w-full bg-blue-600 text-white py-6"
+              className=" bg-blue-600 text-white py-6"
               onClick={() => {
                 setShowTransferForm(false);
               }}>
-              Transfer
+              Transfer {selectedSeats.length} Tickets
             </Button>
           </div>
         </div>
@@ -268,9 +269,9 @@ const TicketCardSlider: React.FC = () => {
 
       <div className="relative">
         <Swiper
-          slidesPerView={1.2}
+          slidesPerView={1}
           centeredSlides={true}
-          spaceBetween={20}
+          spaceBetween={16}
           pagination={{
             clickable: true,
             el: ".swiper-pagination",
@@ -281,7 +282,7 @@ const TicketCardSlider: React.FC = () => {
           className="w-full pb-10">
           {tickets.map((ticket, index) => (
             <SwiperSlide key={index} className="flex justify-center">
-              <div className="border-2 w-80 rounded-2xl mx-auto my-4">
+              <div className=" w-80 rounded-4xl mx-auto my-4">
                 <div className="bg-blue-600 text-white rounded-t-sm text-center py-2">
                   <p className="text-sm font-medium">Standard Ticket</p>
                 </div>
@@ -309,17 +310,36 @@ const TicketCardSlider: React.FC = () => {
 
                 <div className="relative w-full h-48">
                   <Image
-                    src={ticket.eventImage}
-                    alt="Event"
-                    layout="fill"
-                    objectFit="cover"
-                    className="grayscale"
+                    src={ticket.eventImage || test}
+                    alt="Event Image"
+                    width={200}
+                    height={200}
                   />
+
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                   <div className="absolute bottom-0 w-full text-center p-4 text-white">
                     <h2 className="text-lg font-bold">{ticket.theme}</h2>
+                    {/* <p>
+                      {ticket.date
+                        ? ticket.date.toDateString()
+                        : "No date selected"}
+                    </p> */}
                     <p className="text-sm">
-                      {ticket.date} • {ticket.time}
+                      {ticket.date &&
+                        new Date(ticket.date).toLocaleDateString("en-US", {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}{" "}
+                      •{" "}
+                      {ticket.date &&
+                        new Date(ticket.date).toLocaleTimeString("en-US", {
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: true,
+                        })}
+                                  
                     </p>
                     <p className="text-sm">{ticket.venue}</p>
                   </div>

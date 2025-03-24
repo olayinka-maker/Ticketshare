@@ -89,7 +89,7 @@ const TicketCardSlider: React.FC = () => {
                 className="text-gray-500">
                 <X size={24} />
               </button>
-              <p className="text-black text-lg font-medium">
+              <p className="text-black text-md font-medium">
                 SELECT TICKETS TO TRANSFER
               </p>
               <div className="w-6"></div>

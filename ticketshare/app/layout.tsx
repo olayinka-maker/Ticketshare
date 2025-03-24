@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Serif, Manrope } from "next/font/google";
+import { Inter, IBM_Plex_Serif, Manrope, Montserrat } from "next/font/google";
 import "./globals.css";
 import { TicketProvider } from "./_components/TicketContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-const Manrope_font = Manrope({
+const Manrope_font = Montserrat({
   weight: ["400", "700"],
   style: ["normal"],
   subsets: ["latin"],

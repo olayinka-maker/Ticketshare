@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -12,34 +12,30 @@ import {
   BarcodeIcon,
   ChevronLeft,
   ChevronRight,
-  Info,
-  Wallet2Icon,
   X,
   Check,
   Ticket,
   Tickets,
-  ArrowLeft,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { useTickets } from "../_components/TicketContext";
 
-const tickets = [
-  {
-    theme: "Live Concert Night",
-    venue: "Madison Square Garden, NY",
-    date: "April 15, 2025",
-    time: "8:00 PM",
-    section: "A3",
-    row: "12",
-    startingSeatNumber: "24",
-    numberOfTickets: "4",
-    generalAdmission: false,
-    eventImage: test,
-  },
-];
+// const tickets = [
+//   {
+//     theme: "Live Concert Night",
+//     venue: "Madison Square Garden, NY",
+//     date: "April 15, 2025",
+//     time: "8:00 PM",
+//     section: "A3",
+//     row: "12",
+//     startingSeatNumber: "24",
+//     numberOfTickets: "4",
+//     generalAdmission: false,
+//     eventImage: test,
+//   },
+// ];
 
 interface Ticket {
   theme: string;
@@ -61,8 +57,6 @@ const TicketCardSlider: React.FC = () => {
   const { tickets, addTicket } = useTickets();
   console.log(addTicket);
   console.log(tickets);
-
-  const {} = addTicket;
 
   const handleSeatToggle = (seatNumber: number) => {
     setSelectedSeats((prevSeats) =>
@@ -242,7 +236,7 @@ const TicketCardSlider: React.FC = () => {
 
             <p className="text-gray-500 text-sm mt-6">
               Note: The recipient will need a Ticketmaster account to accept
-              these tickets. They'll receive instructions via email.
+              these tickets. They&apos;ll receive instructions via email.
             </p>
           </div>
 
@@ -319,11 +313,6 @@ const TicketCardSlider: React.FC = () => {
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                   <div className="absolute bottom-0 w-full text-center p-4 text-white">
                     <h2 className="text-lg font-bold">{ticket.theme}</h2>
-                    {/* <p>
-                      {ticket.date
-                        ? ticket.date.toDateString()
-                        : "No date selected"}
-                    </p> */}
                     <p className="text-sm">
                       {ticket.date &&
                         new Date(ticket.date).toLocaleDateString("en-US", {
@@ -339,7 +328,6 @@ const TicketCardSlider: React.FC = () => {
                           minute: "2-digit",
                           hour12: true,
                         })}
-                                  
                     </p>
                     <p className="text-sm">{ticket.venue}</p>
                   </div>

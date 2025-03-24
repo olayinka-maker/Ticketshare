@@ -29,7 +29,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="bg-white">
-      <body className={`${Manrope_font.className}`}>
+      <body
+        className={`${inter.className} ${ibmPlexSerif.className} ${Manrope_font.className}`}>
         <div>
           <p></p>
         </div>

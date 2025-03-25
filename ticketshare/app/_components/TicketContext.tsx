@@ -20,7 +20,8 @@ export interface TicketFormData {
   startingSeatNumber: string;
   numberOfTickets: string;
   generalAdmission: boolean;
-  eventImage: string | null;
+  eventImage?: string | null;
+  seat: string;
 }
 
 interface TicketContextType {
@@ -45,34 +46,7 @@ interface TicketProviderProps {
 }
 
 export function TicketProvider({ children }: TicketProviderProps) {
-  const [tickets, setTickets] = useState<TicketFormData[]>([
-    {
-      id: 0,
-      theme: "Live Concert Night",
-      venue: "Madison Square Garden, NY",
-      date: new Date("2025-04-15"),
-      time: "8:00 PM",
-      section: "A3",
-      row: "12",
-      startingSeatNumber: "24",
-      numberOfTickets: "1",
-      generalAdmission: false,
-      eventImage: "/kodaline.jpeg",
-    },
-    {
-      id: 1,
-      theme: "Oasis Reunion Tour",
-      venue: "Heaton Park, Manchester",
-      date: new Date("2025-07-11"),
-      time: "3:30 PM",
-      section: "B5",
-      row: "8",
-      startingSeatNumber: "12",
-      numberOfTickets: "1",
-      generalAdmission: false,
-      eventImage: "/test.jpg",
-    },
-  ]);
+  const [tickets, setTickets] = useState<TicketFormData[]>([]);
   const [selectedTickets, setSelectedTickets] = useState<number[]>([]);
   const [activeTicketIndex, setActiveTicketIndex] = useState(0);
   const [isTransferMode, setIsTransferMode] = useState(false);
@@ -139,7 +113,8 @@ export function TicketProvider({ children }: TicketProviderProps) {
         startTransfer,
         cancelTransfer,
         isTransferMode,
-      }}>
+      }}
+    >
       {children}
     </TicketContext.Provider>
   );

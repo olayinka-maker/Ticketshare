@@ -76,9 +76,9 @@ const TicketCardSlider: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full h-full bg-white max-w-md mx-auto">
+    <div className="relative w-full max-w-md mx-auto">
       <div
-        className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[80vh] ${
+        className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl  ${
           showTransfer ? "translate-y-0" : "translate-y-full"
         } transform`}>
         <div className="w-full h-full flex flex-col overflow-auto">
@@ -112,7 +112,7 @@ const TicketCardSlider: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex justify-center gap-4 mt-6 px-4">
+          <div className="flex justify-center gap-4 mt-6 mb-6 px-4">
             {[1, 2, 3, 4].map((seat, index) => (
               <label
                 key={index}
@@ -356,7 +356,7 @@ const TicketCardSlider: React.FC = () => {
         <div className="swiper-pagination flex justify-center w-full mb-4"></div>
       </div>
 
-      <div className="flex justify-center w-72 my-7 gap-4 mx-auto">
+      <div className="flex justify-center w-72 gap-4 mx-auto">
         <Button
           onClick={handleTransferTo}
           className="flex-1 bg-blue-600 text-white">

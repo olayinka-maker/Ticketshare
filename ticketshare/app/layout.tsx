@@ -31,6 +31,9 @@ export default function RootLayout({
     <html lang="en" className="bg-white">
       <body
         className={`${inter.className} ${ibmPlexSerif.className} ${Manrope_font.className}`}>
+        <div className="text-white py-3 text-center w-full text-3xl bg-blue-800">
+          TicketMaster       
+        </div>
         <div>
           <p></p>
         </div>

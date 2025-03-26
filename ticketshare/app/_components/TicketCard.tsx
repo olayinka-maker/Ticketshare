@@ -19,7 +19,7 @@ const tickets = [
     time: "8:00 PM",
     section: "A3",
     row: "12",
-    startingSeatNumber: "24",
+    startingSeatNumber: "11",
     eventImage: test,
   },
   {
@@ -39,7 +39,7 @@ const tickets = [
     time: "7:00 PM",
     section: "C1",
     row: "5",
-    startingSeatNumber: "19",
+    startingSeatNumber: "13",
     eventImage: test,
   },
 ];
@@ -78,17 +78,27 @@ const TicketCard: React.FC = () => {
                 </div>
                 <div className="text-center">
                   <p className="text-xs">SEAT</p>
-                  <p className="font-bold">{ticket.startingSeatNumber || "-"}</p>
+                  <p className="font-bold">
+                    {ticket.startingSeatNumber || "-"}
+                  </p>
                 </div>
               </div>
 
               {/* Event Image */}
               <div className="relative w-full h-60">
-                <Image src={ticket.eventImage} alt="Event" layout="fill" objectFit="cover" className="grayscale" />
+                <Image
+                  src={ticket.eventImage}
+                  alt="Event"
+                  layout="fill"
+                  objectFit="cover"
+                  className="grayscale"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 w-full text-center p-4 text-white">
                   <h2 className="text-lg font-bold">{ticket.theme}</h2>
-                  <p className="text-sm">{ticket.date} • {ticket.time}</p>
+                  <p className="text-sm">
+                    {ticket.date} • {ticket.time}
+                  </p>
                   <p className="text-sm">{ticket.venue}</p>
                 </div>
               </div>
@@ -99,7 +109,9 @@ const TicketCard: React.FC = () => {
                 <p>View Barcode</p>
               </div>
 
-              <p className="text-blue-600 text-center my-6 font-bold">Ticket Details</p>
+              <p className="text-blue-600 text-center my-6 font-bold">
+                Ticket Details
+              </p>
 
               {/* Verified Badge */}
               <div className="text-white gap-1.5 bg-blue-600 flex items-center justify-center py-2 rounded-b-lg">

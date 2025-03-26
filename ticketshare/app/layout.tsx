@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Serif, Manrope, Montserrat } from "next/font/google";
+import { Inter, IBM_Plex_Serif, Montserrat } from "next/font/google";
 import "./globals.css";
 import { TicketProvider } from "./_components/TicketContext";
 
@@ -31,11 +31,8 @@ export default function RootLayout({
     <html lang="en" className="bg-white">
       <body
         className={`${inter.className} ${ibmPlexSerif.className} ${Manrope_font.className}`}>
-        <div className="text-white py-3 text-center w-full text-3xl bg-blue-800">
-          TicketMaster       
-        </div>
-        <div>
-          <p></p>
+        <div className="text-white py-3 text-center w-full text-3xl bg-blue-600">
+          TicketMaster
         </div>
         <TicketProvider>{children}</TicketProvider>
       </body>

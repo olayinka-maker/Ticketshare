@@ -12,11 +12,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 import { useRouter } from "next/navigation";
 import { useTickets, TicketFormData } from "./TicketContext";
 
 // Initial form state (without ID as it will be generated)
+
+const IMGBB_API_KEY = "198f4cb88bd84077426a3813645c61f9";
+
 const initialFormState: Omit<TicketFormData, "id"> = {
   theme: "",
   venue: "",
@@ -28,7 +30,10 @@ const initialFormState: Omit<TicketFormData, "id"> = {
   numberOfTickets: "",
   generalAdmission: false,
   eventImage: "",
+  seat: "",
 };
+
+//198f4cb88bd84077426a3813645c61f9
 
 const TicketGenerationForm: React.FC = () => {
   // Get addTicket function from context
@@ -37,36 +42,100 @@ const TicketGenerationForm: React.FC = () => {
   // State for the current form
   const [formData, setFormData] =
     useState<Omit<TicketFormData, "id">>(initialFormState);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  console.log(uploading);
   const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]:
-        type === "checkbox"
-          ? checked
-          : type === "file"
-          ? files?.[0] || null
-          : value,
-    }));
+    if (type === "file" && files) {
+      setImageFile(files[0]);
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]:
+          type === "checkbox"
+            ? checked
+            : type === "file"
+            ? files?.[0] || null
+            : value,
+      }));
+    }
   };
 
-  const handleCheckboxChange = (checked: boolean) => {
-    setFormData((prev) => ({
-      ...prev,
-      generalAdmission: checked,
-    }));
+  const uploadImage = async (file: File) => {
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const response = await fetch(
+        `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.success) {
+        return data.data.url;
+      } else {
+        throw new Error("Image upload failed");
+      }
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      return null;
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // const handleCheckboxChange = (checked: boolean) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     generalAdmission: checked,
+  //   }));
+  // };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsGenerating(true);
+    setUploading(true);
 
-    // Add new ticket to context
-    addTicket(formData);
+    let imageUrl = formData.eventImage;
 
-    // Reset form after submission
+    if (imageFile) {
+      const uploadedUrl = await uploadImage(imageFile);
+      if (uploadedUrl) {
+        imageUrl = uploadedUrl;
+      } else {
+        alert("Failed to upload image. Please try again.");
+        setUploading(false);
+        setIsGenerating(false);
+        return;
+      }
+    }
+
+    // Finalize form data with image URL
+    const newTicket = { ...formData, eventImage: imageUrl };
+
+    // Add to ticket context
+    addTicket(newTicket);
+
+    // Save to local storage
+    const storedTickets = JSON.parse(
+      localStorage.getItem("ticketData") || "[]"
+    );
+    localStorage.setItem(
+      "ticketData",
+      JSON.stringify([...storedTickets, newTicket])
+    );
+
+    // Reset form
     setFormData(initialFormState);
+    setImageFile(null);
+    setUploading(false);
+    setIsGenerating(false); // Stop loading
 
     // Navigate to homepage
     router.push("/");
@@ -109,7 +178,8 @@ const TicketGenerationForm: React.FC = () => {
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
-                className="w-full flex justify-between px-3 py-2 border-gray-300 bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50">
+                className="w-full flex justify-between px-3 py-2 border-gray-300 bg-white text-gray-800 rounded-md shadow-sm hover:bg-gray-50"
+              >
                 {formData.date
                   ? format(formData.date, "MM/dd/yyyy")
                   : "Pick a date"}
@@ -159,7 +229,7 @@ const TicketGenerationForm: React.FC = () => {
         )}
 
         {/* Checkbox */}
-        <div className="flex items-center space-x-2">
+        {/* <div className="flex items-center space-x-2">
           <Checkbox
             id="generalAdmission"
             name="generalAdmission"
@@ -169,10 +239,11 @@ const TicketGenerationForm: React.FC = () => {
           />
           <Label
             htmlFor="generalAdmission"
-            className="text-gray-700 font-medium">
+            className="text-gray-700 font-medium"
+          >
             General Admission
           </Label>
-        </div>
+        </div> */}
 
         {/* File Upload */}
         <div>
@@ -184,14 +255,19 @@ const TicketGenerationForm: React.FC = () => {
             className="w-full border-gray-300"
             name="eventImage"
             onChange={handleChange}
+            accept="image/*"
           />
         </div>
 
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full cursor-pointer bg-blue-600 text-white">
-          GENERATE TICKETS
+          className={`w-full cursor-pointer text-white transition-all ${
+            isGenerating ? "bg-blue-400" : "bg-blue-600"
+          }`}
+          disabled={isGenerating}
+        >
+          {isGenerating ? "Generating..." : "GENERATE TICKETS"}
         </Button>
       </form>
     </div>

@@ -77,17 +77,19 @@ const TicketCardSlider: React.FC = () => {
   };
 
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <div className="relative w-full h-full bg-white max-w-md mx-auto">
       <div
-        className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl  ${
+        className={`fixed inset-x-0 bottom-0  bg-white z-50 transition-transform rounded-t-xl h-[80vh] ${
           showTransfer ? "translate-y-0" : "translate-y-full"
-        } transform`}>
+        } transform`}
+      >
         <div className="w-full h-full flex flex-col overflow-auto">
           <div className="border-b border-gray-200">
             <div className="flex justify-between items-center p-4">
               <button
                 onClick={() => setShowTransfer(false)}
-                className="text-gray-500">
+                className="text-gray-500"
+              >
                 <X size={24} />
               </button>
               <p className="text-black text-md font-medium">
@@ -128,7 +130,8 @@ const TicketCardSlider: React.FC = () => {
                         selectedSeats.includes(currentSeatNumber)
                           ? "border-blue-600"
                           : "border-gray-300"
-                      }`}>
+                      }`}
+                    >
                       <p className="bg-blue-600 text-white rounded-t-md py-1 text-sm">
                         SEAT {currentSeatNumber}
                       </p>
@@ -145,7 +148,8 @@ const TicketCardSlider: React.FC = () => {
                             selectedSeats.includes(currentSeatNumber)
                               ? "bg-blue-600 border-blue-600"
                               : "border-gray-300"
-                          }`}>
+                          }`}
+                        >
                           {selectedSeats.includes(currentSeatNumber) && (
                             <Check className="text-white" size={16} />
                           )}
@@ -169,7 +173,8 @@ const TicketCardSlider: React.FC = () => {
                   }
                 }}
                 disabled={selectedSeats.length === 0}
-                className="flex items-center text-blue-600 font-medium disabled:text-gray-400">
+                className="flex items-center text-blue-600 font-medium disabled:text-gray-400"
+              >
                 <span>Transfer to</span>
                 <ChevronRight size={20} />
               </button>
@@ -181,7 +186,8 @@ const TicketCardSlider: React.FC = () => {
       <div
         className={`fixed inset-0 bg-white z-50 transition-transform ${
           showTransferForm ? "translate-y-0" : "translate-y-full"
-        } transform`}>
+        } transform`}
+      >
         <div className="w-full h-full flex flex-col overflow-auto">
           <div className="border-b border-gray-200">
             <div className="flex justify-between items-center p-4">
@@ -190,7 +196,8 @@ const TicketCardSlider: React.FC = () => {
                   setShowTransferForm(false);
                   setShowTransfer(true);
                 }}
-                className="text-gray-500">
+                className="text-gray-500"
+              >
                 <ChevronLeft size={24} />
               </button>
               <p className="text-black text-lg font-medium">TRANSFER TICKETS</p>
@@ -259,7 +266,8 @@ const TicketCardSlider: React.FC = () => {
                 setShowTransferForm(false);
                 setShowTransfer(true);
               }}
-              className=" flex gap-x-2 text-blue-500">
+              className=" flex gap-x-2 text-blue-500"
+            >
               <ChevronLeft size={24} />
               <p>BACK</p>
             </button>
@@ -267,7 +275,8 @@ const TicketCardSlider: React.FC = () => {
               className=" bg-blue-600 text-white py-6"
               onClick={() => {
                 setShowTransferForm(false);
-              }}>
+              }}
+            >
               Transfer {selectedSeats.length} Tickets
             </Button>
           </div>
@@ -285,8 +294,7 @@ const TicketCardSlider: React.FC = () => {
         )}
         <Swiper
           slidesPerView={1.2}
-          centeredSlides={true}
-          spaceBetween={20}
+          spaceBetween={25}
           pagination={{
             clickable: true,
             el: ".swiper-pagination",
@@ -294,14 +302,22 @@ const TicketCardSlider: React.FC = () => {
             bulletActiveClass: "swiper-pagination-bullet-active",
           }}
           modules={[Pagination]}
-          className="w-full pb-10">
+          className="w-full pb-10 overflow-visible"
+          breakpoints={{
+            320: { slidesPerView: 1.12, spaceBetween: 10 }, // Small screens (phones)
+            480: { slidesPerView: 1.15, spaceBetween: 15 }, // Slightly larger screens
+            768: { slidesPerView: 1.2, spaceBetween: 20 }, // Tablets
+            1024: { slidesPerView: 1.3, spaceBetween: 20 }, // Laptops
+          }}
+        >
           {tickets.map((ticket, index) =>
             Array.from({ length: Number(ticket.numberOfTickets) }).map(
               (_, i) => (
                 <SwiperSlide
                   key={`${index}-${i}`}
-                  className="flex gap-2 justify-center">
-                  <div className="w-80 sm:w-88 mx-auto my-4 border border-gray-200">
+                  className="flex gap-2 justify-center"
+                >
+                  <div className="w-66 custom-width sm:w-88 mx-auto my-4 border border-gray-200">
                     <div className="bg-blue-600 text-white rounded-t-sm text-center py-2">
                       <p className="text-sm font-medium">Standard Ticket</p>
                     </div>
@@ -389,7 +405,8 @@ const TicketCardSlider: React.FC = () => {
         <div className="flex justify-center w-82 sm:w-88 my-7 gap-4 mx-auto">
           <Button
             onClick={handleTransferTo}
-            className="flex-1 bg-blue-600 text-white">
+            className="flex-1 bg-blue-600 text-white"
+          >
             Transfer
           </Button>
           <Button className="flex-1 bg-blue-600 text-white">Sell</Button>

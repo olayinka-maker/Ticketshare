@@ -7,3 +7,9 @@
 .swiper-pagination-bullet-active {
   background-color: #1d4ed8; /* Darker blue for active dot */
 }
+
+@media (min-width: 405px) {
+  .custom-width {
+    width: 20rem; /* w-80 */
+  }
+}

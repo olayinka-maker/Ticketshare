@@ -1,116 +1,40 @@
-"use client";
+// // File: components/TicketViewer.tsx - Main ticket viewer component
+// 'use client';
 
-import React, { useState } from "react";
-import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
-import { Button } from "@/components/ui/button";
-import test from "../../public/test.jpg";
-import {
-  BarcodeIcon,
-  ChevronLeft,
-  ChevronRight,
-  X,
-  Check,
-  Ticket,
-  Tickets,
-  WarehouseIcon,
-} from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { useTickets } from "../_components/TicketContext";
-import Link from "next/link";
+// import { useTickets } from './TicketContext';
+// import TicketTransfer from './TicketTransfer';
+// import { Button } from '@/components/ui/button';
+// import TicketDetails from './TicketDetail';
+// import { X } from 'lucide-react';
 
-interface Ticket {
-  theme: string;
-  venue: string;
-  date: string;
-  time: string;
-  section: string;
-  row: string;
-  generalAdmission: boolean;
-  startingSeatNumber: string;
-  numberOfTickets: string;
-  eventImage: string | null;
-}
+// export default function TicketViewer(){
+//   const { activeView, cancelTransfer } = useTickets();
 
-const TicketCardSliider: React.FC = () => {
-  const [showTransfer, setShowTransfer] = useState(false);
-  const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-  const [showTransferForm, setShowTransferForm] = useState(false);
-  const { tickets, addTicket } = useTickets();
+//   return (
+//     <div className="rounded-lg overflow-hidden bg-slate-900 text-white">
+//       {/* Header */}
+//       <div className="flex items-center justify-between p-4 border-b border-slate-800">
+//         <div>
+//           <X size={24} className="text-white cursor-pointer" />
+//         </div>
+//         <div className="text-lg font-semibold">My Tickets</div>
+//         <div className="text-sm text-blue-400">Help</div>
+//       </div>
 
-  const handleSeatToggle = (seatKey: string) => {
-    setSelectedSeats((prevSeats) =>
-      prevSeats.includes(seatKey)
-        ? prevSeats.filter((seat) => seat !== seatKey)
-        : [...prevSeats, seatKey]
-    );
-  };
+//       {/* Network and Battery Status */}
+//       <div className="absolute top-0 left-0 right-0 bg-black p-1 flex justify-between text-xs text-white">
+//         <div className="flex items-center space-x-1">
+//           <div>•••</div>
+//           <div>MTN Nigeria LTE</div>
+//         </div>
+//         <div className="flex items-center space-x-2">
+//           <div>{activeView === 'details' ? 'Recording' : '12:27'}</div>
+//           <div>25%</div>
+//         </div>
+//       </div>
 
-  const handleTransferTo = () => {
-    if (selectedSeats.length > 0) {
-      setShowTransferForm(true);
-    } else {
-      setShowTransfer(true);
-    }
-  };
-
-  return (
-    <div className="relative w-full h-full bg-white max-w-md mx-auto">
-      {/* Rest of the code remains the same until the seat selection section */}
-      <div className="flex justify-center gap-4 mt-6 px-4">
-        {tickets.map((ticket, ticketIndex) => {
-          const startingSeat = Number(ticket.startingSeatNumber);
-
-          // Create unique seats for each ticket
-          const uniqueSeats = Array.from(
-            { length: Number(ticket.numberOfTickets) },
-            (_, i) => ({
-              key: `ticket-${ticketIndex}-seat-${startingSeat + i}`,
-              number: startingSeat + i,
-            })
-          );
-
-          return uniqueSeats.map((seat) => (
-            <label
-              key={seat.key}
-              className={`bg-white rounded-lg w-20 text-center cursor-pointer border ${
-                selectedSeats.includes(seat.key)
-                  ? "border-blue-600"
-                  : "border-gray-300"
-              }`}>
-              <p className="bg-blue-600 text-white rounded-t-md py-1 text-sm">
-                SEAT {seat.number}
-              </p>
-
-              <div className="w-full h-12 flex items-center justify-center">
-                <input
-                  type="checkbox"
-                  className="hidden"
-                  checked={selectedSeats.includes(seat.key)}
-                  onChange={() => handleSeatToggle(seat.key)}
-                />
-                <div
-                  className={`w-6 h-6 rounded-full border flex items-center justify-center ${
-                    selectedSeats.includes(seat.key)
-                      ? "bg-blue-600 border-blue-600"
-                      : "border-gray-300"
-                  }`}>
-                  {selectedSeats.includes(seat.key) && (
-                    <Check className="text-white" size={16} />
-                  )}
-                </div>
-              </div>
-            </label>
-          ));
-        })}
-      </div>
-
-      {/* The rest of the code remains the same */}
-    </div>
-  );
-};
-
-export default TicketCardSliider;
+//       {/* Content */}
+//       {activeView === 'details' ? <TicketDetails /> : <TicketTransfer />}
+//     </div>
+//   );
+// }
